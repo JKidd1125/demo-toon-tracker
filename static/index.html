@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Toon Tracker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">K</span><span>Demo Toon <b>Tracker</b></span></div>
+      <span class="private-badge">PRIVATE CHARACTER JOURNAL</span>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">EUROPE / SILVERMOON / RETAIL</p>
+          <h1>Uther</h1>
+          <p class="subtitle">Your character at a glance, with a record of how far you've come.</p>
+          <div class="hero-actions">
+            <button id="refresh" type="button">Refresh character <span aria-hidden="true">↗</span></button>
+            <a href="https://worldofwarcraft.blizzard.com/en-gb/character/eu/silvermoon/uther" target="_blank" rel="noopener noreferrer">View on WoW ↗</a>
+          </div>
+        </div>
+        <div class="hero-sigil" aria-hidden="true"><span>K</span></div>
+      </section>
+
+      <div id="demo-banner" class="demo-banner" hidden>Demo mode · The numbers below are sample data. Add your Blizzard API credentials to see Uther's real profile.</div>
+      <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+      <section class="section-heading">
+        <div><p class="eyebrow">CURRENT PROFILE</p><h2>Character snapshot</h2></div>
+        <span id="updated" class="updated">Waiting for first update</span>
+      </section>
+
+      <section class="stat-grid" aria-label="Character statistics">
+        <div class="stat-card"><span class="stat-label">LEVEL</span><strong id="level">—</strong><span class="stat-foot">Character level</span></div>
+        <div class="stat-card"><span class="stat-label">ITEM LEVEL</span><strong id="item-level">—</strong><span class="stat-foot">Equipped gear</span></div>
+        <div class="stat-card"><span class="stat-label">CLASS & SPEC</span><strong id="class-spec" class="stat-text">—</strong><span class="stat-foot">Current specialization</span></div>
+        <div class="stat-card"><span class="stat-label">ACHIEVEMENTS</span><strong id="achievements">—</strong><span class="stat-foot">Achievement points</span></div>
+      </section>
+
+      <section class="lower-grid">
+        <article class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">PROGRESSION</p><h2>Item level over time</h2></div><span id="sample-count" class="panel-meta">0 snapshots</span></div>
+          <div id="chart" class="chart" role="img" aria-label="No item level history yet"></div>
+          <p class="panel-note">One snapshot is saved each time the profile is refreshed. The scheduled refresh runs daily.</p>
+        </article>
+        <article class="panel status-panel">
+          <div class="panel-heading"><div><p class="eyebrow">DATA SYNC</p><h2>Refresh status</h2></div><span id="status-dot" class="status-dot"></span></div>
+          <p id="status-message" class="status-message">Checking for updates…</p>
+          <dl class="status-list">
+            <div><dt>Last attempt</dt><dd id="last-attempt">—</dd></div>
+            <div><dt>Last success</dt><dd id="last-success">—</dd></div>
+            <div><dt>Source</dt><dd>Blizzard Profile API</dd></div>
+          </dl>
+        </article>
+      </section>
+    </main>
+    <footer>Made for one character. Built to learn how to run the service behind it.</footer>
+  </div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

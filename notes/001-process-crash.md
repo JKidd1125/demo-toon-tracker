@@ -1,0 +1,1 @@
+Test breaking the website. Ran a command to kill the process and record results. Everything reloaded as it should have after 5 seconds. Verified that application came back up by checking logs and chekcing services.

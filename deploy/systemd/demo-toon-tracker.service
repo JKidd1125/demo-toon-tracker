@@ -1,0 +1,19 @@
+[Unit]
+Description=Uther character tracker
+
+[Service]
+Type=exec
+User=kidd
+Group=kidd
+WorkingDirectory=/home/kidd/cloudops-lab/demo-toon-tracker
+ExecStart=/usr/bin/python3 -u -m app.main
+Environment=DEMO_MODE=true
+Environment=HOST=127.0.0.1
+Environment=PORT=8080
+Environment=DATA_DIR=/home/kidd/cloudops-lab/demo-toon-tracker/data
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
