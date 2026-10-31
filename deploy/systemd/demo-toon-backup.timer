@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the Uther backup daily
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+Persistent=true
+Unit=demo-toon-backup.service
+
+[Install]
+WantedBy=timers.target

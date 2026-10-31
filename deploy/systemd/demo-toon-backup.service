@@ -1,0 +1,12 @@
+[Unit]
+Description=Create and validate a Uther database backup
+
+[Service]
+Type=oneshot
+User=kidd
+Group=kidd
+WorkingDirectory=/home/kidd/cloudops-lab/demo-toon-tracker
+Environment=SOURCE_DB=/home/kidd/cloudops-lab/demo-toon-tracker/data/snapshots.sqlite3
+Environment=BACKUP_DIR=/home/kidd/cloudops-lab/backups
+ExecStart=/usr/bin/bash /home/kidd/cloudops-lab/demo-toon-tracker/scripts/backup.sh
+NoNewPrivileges=true
