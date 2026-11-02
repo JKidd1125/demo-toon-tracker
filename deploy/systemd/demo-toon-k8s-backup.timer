@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the Kubernetes tracker backup daily
+
+[Timer]
+OnCalendar=*-*-* 06:20:00
+Persistent=true
+Unit=demo-toon-k8s-backup.service
+
+[Install]
+WantedBy=timers.target
