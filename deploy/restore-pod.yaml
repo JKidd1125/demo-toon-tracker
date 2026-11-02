@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-toon-restore
+  namespace: demo-toon
+spec:
+  restartPolicy: Never
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+  containers:
+    - name: restore
+      image: demo-toon-tracker:0.1.0
+      imagePullPolicy: Never
+      command:
+        - python
+        - -c
+        - "import time; time.sleep(3600)"
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: demo-toon-data

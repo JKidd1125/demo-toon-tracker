@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-toon-tracker
+  namespace: demo-toon
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: demo-toon-tracker
+  template:
+    metadata:
+      labels:
+        app: demo-toon-tracker
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: tracker
+          image: demo-toon-tracker:0.1.0
+          imagePullPolicy: Never
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DATA_DIR
+              value: /data
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: "8080"
+            - name: DEMO_MODE
+              value: "false"
+            - name: BLIZZARD_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: blizzard-api
+                  key: BLIZZARD_CLIENT_ID
+            - name: BLIZZARD_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: blizzard-api
+                  key: BLIZZARD_CLIENT_SECRET
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 2
+            timeoutSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /api/state
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: demo-toon-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-toon-tracker
+  namespace: demo-toon
+spec:
+  type: ClusterIP
+  selector:
+    app: demo-toon-tracker
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo-toon
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: demo-toon-data
+  namespace: demo-toon
+spec:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
