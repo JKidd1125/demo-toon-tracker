@@ -1,0 +1,33 @@
+services:
+  tracker:
+    image: demo-toon-tracker:0.1.0
+    build:
+      context: .
+    container_name: demo-toon-live
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    environment:
+      DEMO_MODE: "false"
+      HOST: "0.0.0.0"
+      PORT: "8080"
+      DATA_DIR: "/data"
+    ports:
+      - "127.0.0.1:8081:8080"
+    volumes:
+      - tracker-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=3).read()"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  tracker-data:
+    external: true
+    name: demo-toon-live-data
