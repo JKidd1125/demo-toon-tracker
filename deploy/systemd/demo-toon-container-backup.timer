@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the containerized tracker backup daily
+
+[Timer]
+OnCalendar=*-*-* 06:10:00
+Persistent=true
+Unit=demo-toon-container-backup.service
+
+[Install]
+WantedBy=timers.target
