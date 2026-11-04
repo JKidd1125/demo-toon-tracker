@@ -1,0 +1,94 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: raid-load
+  namespace: raid-demo
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 240
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app: raid-load
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: load
+          image: raid-simulator:0.1.0
+          imagePullPolicy: Never
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          command:
+            - python
+            - -u
+            - -c
+          args:
+            - |
+              import json
+              import threading
+              import time
+              import urllib.request
+              from collections import Counter
+
+              started = time.monotonic()
+              deadline = started + 180
+              lock = threading.Lock()
+              successes = Counter()
+              failures = Counter()
+
+              def worker():
+                  while time.monotonic() < deadline:
+                      try:
+                          request = urllib.request.Request(
+                              "http://raid-simulator:8080/work",
+                              headers={"Connection": "close"},
+                          )
+                          with urllib.request.urlopen(request, timeout=3) as response:
+                              result = json.load(response)
+                          with lock:
+                              successes[result["pod"]] += 1
+                      except Exception as exc:
+                          with lock:
+                              failures[type(exc).__name__] += 1
+                      time.sleep(0.05)
+
+              def report(event):
+                  with lock:
+                      print(json.dumps({
+                          "event": event,
+                          "elapsed_seconds": round(time.monotonic() - started),
+                          "successful_requests": sum(successes.values()),
+                          "failed_requests": sum(failures.values()),
+                          "requests_by_pod": dict(successes),
+                          "failure_types": dict(failures),
+                      }), flush=True)
+
+              threads = [threading.Thread(target=worker) for _ in range(4)]
+              report("starting")
+              for thread in threads:
+                  thread.start()
+              while any(thread.is_alive() for thread in threads):
+                  time.sleep(5)
+                  report("progress")
+              for thread in threads:
+                  thread.join()
+              report("finished")

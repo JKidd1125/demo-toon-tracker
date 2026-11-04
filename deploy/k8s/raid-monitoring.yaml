@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: raid-simulator
+  namespace: raid-demo
+  labels:
+    release: monitoring
+spec:
+  namespaceSelector:
+    matchNames:
+      - raid-demo
+  selector:
+    matchLabels:
+      app: raid-simulator
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 5s
+      scrapeTimeout: 3s

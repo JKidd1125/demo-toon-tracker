@@ -1,0 +1,13 @@
+NAME                              READY   STATUS              RESTARTS   AGE
+raid-simulator-6bddd8cb9b-jrp8w   1/1     Terminating         0          10s
+raid-simulator-6bddd8cb9b-lb487   0/1     ContainerCreating   0          0s
+raid-simulator-6bddd8cb9b-s8rj4   1/1     Running             0          64m
+raid-simulator-6bddd8cb9b-tj8n2   1/1     Running             0          10s
+raid-simulator-6bddd8cb9b-lb487   0/1     ContainerCreating   0          0s
+raid-simulator-6bddd8cb9b-lb487   0/1     Running             0          0s
+raid-simulator-6bddd8cb9b-lb487   0/1     Running             0          2s
+raid-simulator-6bddd8cb9b-lb487   0/1     Running             0          2s
+raid-simulator-6bddd8cb9b-lb487   1/1     Running             0          3s
+raid-simulator-6bddd8cb9b-jrp8w   0/1     Error               0          40s
+raid-simulator-6bddd8cb9b-jrp8w   0/1     Error               0          40s
+raid-simulator-6bddd8cb9b-jrp8w   0/1     Error               0          40s
