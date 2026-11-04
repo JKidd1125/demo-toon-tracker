@@ -2,6 +2,8 @@
 Description=Back up the Kubernetes Uther tracker
 Requires=k3s.service
 After=k3s.service
+StartLimitIntervalSec=300
+StartLimitBurst=3
 
 [Service]
 Type=oneshot
@@ -11,4 +13,6 @@ WorkingDirectory=/home/kidd/cloudops-lab/demo-toon-tracker
 Environment=KUBECONFIG=/home/kidd/.kube/config
 ExecStart=/usr/bin/bash /home/kidd/cloudops-lab/demo-toon-tracker/scripts/backup-k8s.sh
 TimeoutStartSec=180
+Restart=on-failure
+RestartSec=10
 NoNewPrivileges=true
