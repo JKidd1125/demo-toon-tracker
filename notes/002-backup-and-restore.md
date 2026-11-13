@@ -20,7 +20,7 @@ Achievement points: 1,925.
 
 This demonstrated that the application could read and use the restored history. 
 
-I then used AWS CLI against Moto on port 5000 which let me practice uploading the database to AWS S3, downloading it, and then comparing the backups to make sure everything was confirmed.
+I used the AWS CLI with Moto, a local simulator, to practice uploading and downloading a database backup through an S3-compatible endpoint. I compared the checksums to confirm that the downloaded file matched the original. The exercise ran on my laptop.
 
 This test confirms that I was able to take a full backup of the application, upload it to AWS, and download the backup and run the application with it.
 
