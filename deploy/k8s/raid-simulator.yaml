@@ -109,11 +109,11 @@ spec:
       stabilizationWindowSeconds: 0
       policies:
         - type: Pods
-          value: 2
-          periodSeconds: 15
+          value: 1
+          periodSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 30
       policies:
         - type: Pods
-          value: 2
-          periodSeconds: 15
+          value: 1
+          periodSeconds: 60
