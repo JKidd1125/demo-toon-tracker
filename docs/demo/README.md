@@ -18,3 +18,9 @@ I also tested pod replacement by removing a running pod and verifying that Kuber
 ## Backup Testing
 
 The application stores data in SQLite on persistent storage. I created scheduled backups and tested restoring the database to verify that character data could be recovered successfully.
+
+## Recovery Notes
+
+- [Process recovery test](../../notes/001-process-crash.md) shows how I verified that systemd restarted the tracker after a process failure.
+- [Backup and restore test](../../notes/002-backup-and-restore.md) explains how I restored the SQLite database and verified a backup transfer using Moto.
+
