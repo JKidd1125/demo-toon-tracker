@@ -1,18 +1,20 @@
-# Demo notes
+# Demo Notes
 
-The [project preview](../../README.md#preview) shows all 16 slides. You can also [download the slideshow](slideshow.zip?raw=true), unzip it, and open `index.html` in your browser. The slideshow works offline.
+The screenshots in the main README were captured from my local K3s lab environment.
 
-## What I tested
+## Scaling Tests
 
-I sent test requests to a separate raid simulator. As CPU use increased, Kubernetes added simulator pods. After the test traffic stopped, Kubernetes removed the extra pods. The slides show the full sequence from one pod to three and back to one.
+I used a separate raid simulator to generate load and test Kubernetes scaling behavior. As CPU usage increased, Kubernetes scaled the deployment from one pod to three pods. After the load stopped, the deployment returned to a single pod.
 
-| Test | Successful requests | Failures reported by the test client |
-| --- | ---: | ---: |
+| Test | Successful Requests | Failed Requests |
+|--------|-------------------:|----------------:|
 | Scaling | 10,192 | 0 |
-| Pod replacement | 10,107 | 0 |
+| Pod Replacement | 10,107 | 0 |
 
-The totals come from two earlier test runs. The staged screenshots show a later run. All tests ran on a single local Kubernetes node. The results describe those runs.
+These totals come from two earlier test runs. The screenshots that show each scaling step come from a later run on the same local K3s cluster.
 
-## Backup and recovery
+I also tested pod replacement by removing a running pod and verifying that Kubernetes automatically created a replacement.
 
-The tracker saves character history in SQLite. The backup job exports the running database, checks its structure, and keeps up to five copies. I tested a restore in a separate copy of the app and checked that it could read the saved character history.
+## Backup Testing
+
+The application stores data in SQLite on persistent storage. I created scheduled backups and tested restoring the database to verify that character data could be recovered successfully.

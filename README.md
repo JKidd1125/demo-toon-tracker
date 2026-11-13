@@ -1,34 +1,53 @@
-# NAME
+# Demo Toon Tracker
 
-**Demo Toon Tracker** is a World of Warcraft character tracker and a CloudOps practice project. It shows a character’s current stats and saves a history of changes. I built and ran the project on a local Kubernetes cluster.
+Demo Toon Tracker is a World of Warcraft character tracker that I built as a CloudOps learning project.
 
-I ran this project on my laptop. The preview below shows recorded tests from that local setup.
+The goal was not just to build an application, but to learn how to deploy, monitor, back up, and manage it on Kubernetes. The project runs on a local K3s cluster and uses a SQLite database to store character history over time.
 
-## FEATURES
+To make learning more enjoyable, I often build projects around interests outside of work. In this case, I used World of Warcraft as the theme while focusing on cloud infrastructure, monitoring, automation, and operational practices.
 
-- View character stats from the Blizzard Profile API or try the app with sample data.
-- Save character snapshots in SQLite and see how item level changes over time.
-- Keep the database on a Kubernetes persistent volume so the data stays available when the tracker pod is replaced.
-- Create scheduled database backups and check that the backup files are readable.
-- Use a separate raid simulator to test how Kubernetes adds and removes pods as CPU use changes.
-- View request rates, errors, CPU use, and pod counts in Grafana.
+## Technologies Used
 
-## THE PROCESS
+- Kubernetes (K3s)
+- Docker
+- Python
+- SQLite
+- Grafana
+- GitHub
+- Linux
 
-1. I started with a Python app and a SQLite database. I added tests for the API request, saved snapshots, and missing profile fields.
-2. I used Docker to build a container image and deployed it to K3s, a version of Kubernetes. The tracker runs as a regular user inside the container.
-3. I moved the database to persistent storage and tested that the tracker could read a restored backup.
-4. I ran a separate simulator under load. Kubernetes scaled it from one pod to three and back to one. I also removed a pod during a separate test and watched Kubernetes replace it.
+## Features
 
-The tracker runs as one pod on my laptop. The simulator can run several copies because it does not store character data. [Read the demo notes](docs/demo/README.md).
+- View World of Warcraft character information using the Blizzard API
+- Save character snapshots and track item level changes over time
+- Store data on a Kubernetes persistent volume
+- Create and validate scheduled database backups
+- Test Kubernetes auto-scaling using a separate raid simulator
+- Monitor application and infrastructure metrics using Grafana
 
-## RUNNING THE PROJECT
+## Project Goals
 
-### Try the tracker with sample data
+This project was created to help me gain hands-on experience running applications on Kubernetes.
 
-Install Python 3.11 or newer. Open a terminal in the project folder and run the commands for your system.
+During development I focused on:
 
-**Linux or macOS**
+- Containerizing applications with Docker
+- Deploying workloads to Kubernetes
+- Using persistent storage
+- Creating backup and recovery procedures
+- Learning Kubernetes scaling behavior
+- Building monitoring dashboards with Grafana
+- Troubleshooting containers and cluster resources
+
+The application itself is intentionally simple. The primary goal was to learn and practice the infrastructure and operational side of running modern cloud workloads.
+
+## Running the Project
+
+### Run with Sample Data
+
+Install Python 3.11 or newer.
+
+**Linux / macOS**
 
 ```bash
 DEMO_MODE=true HOST=127.0.0.1 PORT=8080 python3 -m app.main
@@ -43,70 +62,85 @@ $env:PORT = '8080'
 python -m app.main
 ```
 
-Open <http://127.0.0.1:8080> in your browser. Press **Ctrl+C** in the terminal to stop the app. Sample mode works without a Blizzard account or API credentials.
+Open:
 
-### Run the tracker with Docker
+http://127.0.0.1:8080
 
-With Docker running, build the image from the project folder and start the container.
+### Run with Docker
 
 ```bash
 docker build -t demo-toon-tracker:demo .
 docker run --rm -p 127.0.0.1:8080:8080 -e DEMO_MODE=true -v demo-toon-demo-data:/data demo-toon-tracker:demo
 ```
 
-Open the same local address in your browser. The Docker volume keeps sample history after the container stops.
+The Docker volume preserves the application data after the container is stopped.
 
-### Run the application tests
+### Run the Tests
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-On Windows, use `python` in place of `python3`.
+On Windows, use `python` instead of `python3`.
 
-### Use live character data
+### Use Live Blizzard Data
 
-Create a client in the [Battle.net Developer Portal](https://community.developer.battle.net/). Set `DEMO_MODE=false` and provide `BLIZZARD_CLIENT_ID` and `BLIZZARD_CLIENT_SECRET` in your local environment before starting the app. Keep your credentials out of Git.
+Create a client in the Battle.net Developer Portal and configure:
 
-## PREVIEW
+```bash
+BLIZZARD_CLIENT_ID
+BLIZZARD_CLIENT_SECRET
+DEMO_MODE=false
+```
 
-The 16 slides show the app, the Kubernetes setup, the backup process, and the scaling test.
+The block above lists the settings. Set `BLIZZARD_CLIENT_ID` and `BLIZZARD_CLIENT_SECRET` to your own values in your local environment before starting the tracker.
 
-![Slide 1 of 16. Demo Toon Tracker project introduction](docs/demo/slides/01-introduction.png)
+Keep credentials outside of Git and store them securely.
+
+## Project Demo
+
+The screenshots below show the application, infrastructure, backup testing, monitoring, and Kubernetes scaling demonstrations performed in my local lab environment.
+
+![Project Introduction](docs/demo/slides/01-introduction.png)
 
 <details>
-<summary>View slides 2–16</summary>
+<summary>View additional screenshots</summary>
 
-![Slide 2. Infrastructure diagram](docs/demo/slides/02-architecture.png)
+![Infrastructure Diagram](docs/demo/slides/02-architecture.png)
 
-![Slide 3. The tracker application and character history](docs/demo/slides/03-application.png)
+![Application Interface](docs/demo/slides/03-application.png)
 
-![Slide 4. Ubuntu setup and Kubernetes pod resource use](docs/demo/slides/04-foundation.png)
+![Kubernetes Foundation](docs/demo/slides/04-foundation.png)
 
-![Slide 5. Docker image and application user](docs/demo/slides/05-packaging.png)
+![Docker Packaging](docs/demo/slides/05-packaging.png)
 
-![Slide 6. Git history and passing application tests](docs/demo/slides/06-engineering.png)
+![Testing and Git History](docs/demo/slides/06-engineering.png)
 
-![Slide 7. Scheduled backups and validation](docs/demo/slides/07-recovery.png)
+![Backup and Recovery](docs/demo/slides/07-recovery.png)
 
-![Slide 8. Kubernetes deployment and persistent storage](docs/demo/slides/08-deployment.png)
+![Deployment and Storage](docs/demo/slides/08-deployment.png)
 
-![Slide 9. CPU target and scaling rules](docs/demo/slides/09-scaling-rules.png)
+![Scaling Rules](docs/demo/slides/09-scaling-rules.png)
 
-![Slide 10. Traffic starts with one ready pod](docs/demo/slides/10-one-pod.png)
+![Single Pod](docs/demo/slides/10-one-pod.png)
 
-![Slide 11. Kubernetes adds a second pod](docs/demo/slides/11-two-pods.png)
+![Two Pods](docs/demo/slides/11-two-pods.png)
 
-![Slide 12. Three pods share the work](docs/demo/slides/12-three-pods.png)
+![Three Pods](docs/demo/slides/12-three-pods.png)
 
-![Slide 13. Kubernetes scales down to two pods](docs/demo/slides/13-down-to-two.png)
+![Scale Down](docs/demo/slides/13-down-to-two.png)
 
-![Slide 14. Kubernetes returns to one ready pod](docs/demo/slides/14-down-to-one.png)
+![Scale to One](docs/demo/slides/14-down-to-one.png)
 
-![Slide 15. Full scaling timeline in Grafana](docs/demo/slides/15-timeline.png)
+![Grafana Timeline](docs/demo/slides/15-timeline.png)
 
-![Slide 16. Results from the scaling and pod replacement tests](docs/demo/slides/16-results.png)
+![Results](docs/demo/slides/16-results.png)
 
 </details>
 
-For a slide-by-slide view, [download the interactive slideshow](docs/demo/slideshow.zip?raw=true). Unzip it and open `index.html` in your browser. Use the arrow keys to move through the slides.
+For additional details, see the project documentation in the `/docs` directory.
+
+[Download the interactive slideshow](docs/demo/slideshow.zip?raw=true).
+Unzip it, open `index.html` in your browser, and use the arrow keys to move through the slides.
+
+[Read the demo notes](docs/demo/README.md) for the test results.
